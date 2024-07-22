@@ -4,7 +4,7 @@ import { CarService } from './car.service';
 import { Car } from './car';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +16,16 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'carmanagement';
   cars: Car[] = [];
+  selectedCarId: number | null = null;
 
   constructor(private carService: CarService) {}
 
   ngOnInit(): void {
     this.getCars();
+  }
+
+  onOpenUpdateModal(carId: number): void {
+    this.selectedCarId = carId;
   }
 
   public getCars(): void {
@@ -32,5 +37,31 @@ export class AppComponent implements OnInit {
         console.error('Erro ao buscar os carros', error);
       }
     });
+  }
+
+  public onAdd(addForm: NgForm): void {
+    document.getElementById("add-car-form-close-btn")?.click();
+    this.carService.addCar(addForm.value).subscribe(
+      (response: Car) => {
+        console.log(response);
+        this.getCars;
+        location.reload();
+      }, (error: HttpErrorResponse) => {
+        console.error(error.message);
+      }
+    )
+  }
+
+  public onUpdate(updateForm: NgForm): void {
+    document.getElementById("update-car-form-close-btn")?.click();
+    this.carService.updateCar(updateForm.value, this.selectedCarId).subscribe(
+      (response: Car) => {
+        console.log(response);
+        this.getCars;
+        location.reload();
+      }, (error: HttpErrorResponse) => {
+        console.error(error.message);
+      }
+    )
   }
 }

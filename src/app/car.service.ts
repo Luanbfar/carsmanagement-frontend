@@ -20,8 +20,8 @@ export class CarService {
     return this.http.post<Car>(`${this.apiServerURL}/car/add`, car);
   }
 
-  public updateCar(car: Car): Observable<Car> {
-    return this.http.put<Car>(`${this.apiServerURL}/car/update`, car);
+  public updateCar(car: Partial<Car>, carId: number | null): Observable<Car> {
+    return this.http.put<Car>(`${this.apiServerURL}/car/update/${carId}`, car);
   }
 
   public deleteCar(carId: number): Observable<void> {
